@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+  deb-master:
+    build: debian/master
+    image: salt-debian-master:build-py3
+    container_name: salt-deb-master
+    entrypoint:
+      - salt-master
+      - --log-level
+      - info
+    volumes:
+      - deb-volume:/srv/salt/files
+  deb-builder:
+    build: debian/builder
+    image: salt-debian-builder:build-py3
+    links:
+      - deb-master:salt
+    entrypoint:
+      - salt-minion
+      - --log-level
+      - debug
+    volumes:
+      - deb-volume:/var/build
+  deb-minion:
+    build: debian/minion
+    image: salt-debian-minion:build-py3
+    links:
+      - deb-master:salt
+    entrypoint:
+      - salt-minion
+      - --log-level
+      - debug
+
+  centos-master:
+    build: centos/master
+    image: salt-centos-master:build-py3
+    container_name: salt-centos-master
+    entrypoint:
+      - salt-master
+      - --log-level
+      - info
+    volumes:
+      - centos-volume:/var/build
+  centos-builder:
+    build: centos/builder
+    image: salt-centos-builder:build-py3
+    links:
+      - centos-master:salt
+    entrypoint:
+      - salt-minion
+      - --log-level
+      - debug
+    volumes:
+      - centos-volume:/var/build
+  centos-minion:
+    build: centos/minion
+    image: salt-centos-minion:build-py3
+    links:
+      - centos-master:salt
+    entrypoint:
+      - salt-minion
+      - --log-level
+      - debug
+
+volumes:
+  deb-volume:
+  centos-volume:
