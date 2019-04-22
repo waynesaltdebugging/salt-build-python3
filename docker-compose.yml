@@ -25,6 +25,7 @@ services:
   deb-minion:
     build: debian/minion
     image: salt-debian-minion:build-py3
+    container_name: salt-deb-minion
     links:
       - deb-master:salt
     entrypoint:
@@ -56,6 +57,7 @@ services:
   centos-minion:
     build: centos/minion
     image: salt-centos-minion:build-py3
+    container_name: salt-centos-minion
     links:
       - centos-master:salt
     entrypoint:
