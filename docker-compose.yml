@@ -41,7 +41,7 @@ services:
       - --log-level
       - info
     volumes:
-      - centos-volume:/var/build
+      - centos-volume:/srv/salt/files
   centos-builder:
     build: centos/builder
     image: salt-centos-builder:build-py3
